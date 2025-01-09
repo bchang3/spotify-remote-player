@@ -37,7 +37,7 @@ void setup() {
     // ...
   });
 
-  client.open("http://100.27.128.63:3333", 80);
+  client.open("ws://100.27.128.63:3333", 80);
   Serial.println("Opened?");
 }
 
