@@ -13,7 +13,7 @@ port = int(os.getenv('PORT', "3333"))
 
 @app.route('/')
 def index():
-    return "WebSocket Server is running!"
+    return "APT Spotify WebSocket server is running!"
 
 @socketio.on('message')
 def handle_message(msg):
