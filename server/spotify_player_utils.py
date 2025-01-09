@@ -1,7 +1,6 @@
 import time
 
 def clearQueue(spotifyObject, deviceID):
-    print(len(spotifyObject.queue()))
     for i in range(len(spotifyObject.queue())):
         spotifyObject.next_track(deviceID)
         time.sleep(0.1)
@@ -12,6 +11,7 @@ def get_playlists(spotifyObject, deviceID):
     dict_playlists = {"red": [], "green": [], "blue": []}
     while playlists:
         for i, playlist in enumerate(playlists['items']):
+            # print(playlist["name"], playlist["uri"])
             if (playlist["name"] in ["red", "green", "blue"]):
                 playlistTracks = spotifyObject.playlist_tracks(playlist['uri'])
                 trackItems = playlistTracks['items']
