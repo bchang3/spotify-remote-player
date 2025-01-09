@@ -50,7 +50,7 @@ def handle_post_request():
     # Process the data (for example, log it or store it)
     print(f"Received message: {data}")
     if (data.get("action") == "play_music"):
-        spotifyObject.pause_playback()
+        spotifyObject.pause_playback(deviceID)
         clearQueue(spotifyObject, deviceID)
         playlist = rgb_playlist["red"]
         for song in playlist:
