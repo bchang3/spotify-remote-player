@@ -29,7 +29,11 @@ rgb_playlist = get_playlists(spotifyObject, deviceID) # a dictionary of the play
 
 print(f"WELCOME TO THE PROJECT, {user_name['display_name']}\nCurrent Device: {device['name']}"  )
 
-
+command_to_playlist = {
+    "0x58": "spotify:playlist:09dqjgCuarBiOKInqOKIdF",
+    "0x59": "spotify:playlist:1t6z5svHyNX5UXQjjNhZbL",
+    "0x45": "spotify:playlist:5NjzcO3AA4l7Gj1q6J7BB9"
+}
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_default_key')
 socketio = SocketIO(app)
@@ -50,7 +54,8 @@ def handle_post_request():
     # Process the data (for example, log it or store it)
     print(f"Received message: {data}")
     if (data.get("action") == "play_music"):
-        spotifyObject.start_playback(deviceID, context_uri="spotify:playlist:09dqjgCuarBiOKInqOKIdF")
+        print(command_to_playlist.get(data.get("command")))
+        spotifyObject.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
         response = {
           "message": "Starting playlist!",
           "received_data": data
