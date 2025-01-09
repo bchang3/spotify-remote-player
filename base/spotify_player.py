@@ -1,12 +1,9 @@
-import json
 import spotipy
-import webbrowser
 import time
 import serial
 import serial.tools.list_ports
 from spotify_player_utils import clearQueue, get_playlists
 import random
-import signal
 import sys
 
 

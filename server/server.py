@@ -15,6 +15,8 @@ clientSecret = os.getenv('SPOTIFY_CLIENT_SECRET',)
 redirect_uri = "http://google.com/callback/"
 scope = "user-read-playback-state playlist-modify-public user-modify-playback-state streaming app-remote-control playlist-read-collaborative playlist-read-private"
 oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri, scope=scope)
+auth_url = oauth_object.get_authorize_url()
+print(f"Authorize URL: {auth_url}")
 token = oauth_object.get_access_token()['access_token']
 spotifyObject = spotipy.Spotify(token)
 
