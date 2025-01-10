@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
 import os
+import time
 import spotipy
 from spotify_player_utils import clearQueue, get_playlists
 
@@ -56,12 +57,12 @@ def handle_post_request():
     print(f"Received message: {data}")
     if (data.get("action") == "play_music"):
         token = oauth_object.get_cached_token()
-        if (oauth_object.is_token_expired(token)):
+        if (not token or token['expires_at'] - time.time() < 60):
           print("refreshing token:")
           token_info = oauth_object.refresh_access_token(token_info['refresh_token'])
           spotifyClient = spotipy.Spotify(auth=token_info['access_token'])
         else:
-           print(f"using cached token:{token}")
+           print(f"using cached token: expires in {int(token['expires_at'] - time.time())} seconds.")
         print(command_to_playlist.get(data.get("command")))
         spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
         response = {
