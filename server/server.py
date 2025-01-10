@@ -18,14 +18,14 @@ oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri, scope=
 auth_url = oauth_object.get_authorize_url()
 print(f"Authorize URL: {auth_url}")
 token = oauth_object.get_access_token()['access_token']
-spotifyObject = spotipy.Spotify(token)
+spotifyClient = spotipy.Spotify(token)
 
-user_name = spotifyObject.current_user()
+user_name = spotifyClient.current_user()
 
-print(spotifyObject.devices()['devices'] )
-device = [x for x in spotifyObject.devices()['devices'] if x['name'] == "Benjamin’s MacBook Pro"][0] #gets the ID for specified device
+print(spotifyClient.devices()['devices'] )
+device = [x for x in spotifyClient.devices()['devices'] if x['name'] == "Benjamin’s MacBook Pro"][0] #gets the ID for specified device
 deviceID = device["id"]
-rgb_playlist = get_playlists(spotifyObject, deviceID) # a dictionary of the playlists called "red", "green", "blue" that the user has
+rgb_playlist = get_playlists(spotifyClient, deviceID) # a dictionary of the playlists called "red", "green", "blue" that the user has
 
 print(f"WELCOME TO THE PROJECT, {user_name['display_name']}\nCurrent Device: {device['name']}"  )
 
@@ -45,6 +45,7 @@ def index():
 
 @app.route('/api/play_music', methods=['POST'])
 def handle_post_request():
+    global spotifyClient
     # Parse the JSON data from the request
     data = request.get_json()
     
@@ -54,8 +55,15 @@ def handle_post_request():
     # Process the data (for example, log it or store it)
     print(f"Received message: {data}")
     if (data.get("action") == "play_music"):
+        token = oauth_object.get_cached_token()
+        if (oauth_object.is_token_expired(token)):
+          print("refreshing token:")
+          token_info = oauth_object.refresh_access_token(token_info['refresh_token'])
+          spotifyClient = spotipy.Spotify(auth=token_info['access_token'])
+        else:
+           print("using cached token:")
         print(command_to_playlist.get(data.get("command")))
-        spotifyObject.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
+        spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
         response = {
           "message": "Starting playlist!",
           "received_data": data

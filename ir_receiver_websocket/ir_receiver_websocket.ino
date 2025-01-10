@@ -10,7 +10,6 @@ ArduinoLEDMatrix matrix;
 char ssid[] = SECRET_SSID;    
 char pass[] = SECRET_PASS;
 char serverAddress[] = "100.27.128.63:3333";  // server address
-
 int keyIndex = 0;            // your network key index number (needed only for WEP)
 int IR_RECEIVE_PIN = 7;
 int status = WL_IDLE_STATUS;
@@ -107,16 +106,7 @@ void read_response() {
 void loop() {
 /* -------------------------------------------------------------------------- */  
   read_response();
-
-  // if the server's disconnected, stop the client:
-  if (!client.connected()) {
-    Serial.println();
-    Serial.println("disconnecting from server.");
-    client.stop();
-
-    // do nothing forevermore:
-    while (true);
-  }
+    
   if (IrReceiver.decode()) {
 
         /*
@@ -137,32 +127,36 @@ void loop() {
         /*
          * Finally, check the received data and perform actions according to the received command
          */
-        if (IrReceiver.decodedIRData.command == 0x58) {
-          Serial.println("Red - primary");
-           String payload = "{\"action\":\"play_music\",\"command\":\"0x58\"}";
-          
-        } else if (IrReceiver.decodedIRData.command == 0x59) {
-          Serial.println("Red - primary");
-          String payload = "{\"action\":\"play_music\",\"command\":\"0x59\"}";
-            // do something else
-        } else if (IrReceiver.decodedIRData.command == 0x45) {
-          Serial.println("Red - primary");
-           String payload = "{\"action\":\"play_music\",\"command\":\"0x45\"}";
-            // do something else
-        }
-        // // Make a HTTP request:
-        // // Construct the full HTTP POST request in one go
-        String httpRequest = String("POST /api/play_music HTTP/1.1\r\n") +
-                            "Host: http://100.27.128.63:3333\r\n" +
-                            "Content-Type: application/json\r\n" +
-                            "Content-Length: " + String(payload.length()) + "\r\n" +
-                            "Connection: close\r\n\r\n" +  // End of headers
-                            payload;                      // JSON payload
+        if (client.connect(server, 3333)) {
+          Serial.println("connected to server");
+          String payload;
+          if (IrReceiver.decodedIRData.command == 0x58) {
+            Serial.println("Red - primary");
+            payload = "{\"action\":\"play_music\",\"command\":\"0x58\"}";
+            
+          } else if (IrReceiver.decodedIRData.command == 0x59) {
+            Serial.println("Green - primary");
+            payload = "{\"action\":\"play_music\",\"command\":\"0x59\"}";
+              // do something else
+          } else if (IrReceiver.decodedIRData.command == 0x45) {
+            Serial.println("Blue - primary");
+            payload = "{\"action\":\"play_music\",\"command\":\"0x45\"}";
+              // do something else
+          }
+          // // Make a HTTP request:
+          // // Construct the full HTTP POST request in one go
+          String httpRequest = String("POST /api/play_music HTTP/1.1\r\n") +
+                              "Host: http://100.27.128.63:3333\r\n" +
+                              "Content-Type: application/json\r\n" +
+                              "Content-Length: " + String(payload.length()) + "\r\n" +
+                              "Connection: close\r\n\r\n" +  // End of headers
+                              payload;                      // JSON payload
 
-        // Send the HTTP POST request
-        client.print(httpRequest);
-        client.println("Connection: close");
-        client.println();
+          // Send the HTTP POST request
+          client.print(httpRequest);
+          client.println("Connection: close");
+        }
+        
         // do something
     }
 }
