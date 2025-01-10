@@ -61,7 +61,7 @@ def handle_post_request():
           token_info = oauth_object.refresh_access_token(token_info['refresh_token'])
           spotifyClient = spotipy.Spotify(auth=token_info['access_token'])
         else:
-           print("using cached token:")
+           print(f"using cached token:{token}")
         print(command_to_playlist.get(data.get("command")))
         spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
         response = {
