@@ -1,5 +1,5 @@
 import time
-
+linebreak = "~" * 100
 def clearQueue(spotifyObject, deviceID):
     for i in range(len(spotifyObject.queue())):
         spotifyObject.next_track(deviceID)
