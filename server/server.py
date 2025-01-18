@@ -30,7 +30,7 @@ device = getDevice(spotifyClient)
 deviceID = getDeviceID(spotifyClient)
 if device:
   print(f"WELCOME TO THE PROJECT, {user_name['display_name']}\nCurrent Device: {device['name']}"  )
-  print_playlists(spotifyClient, deviceID)
+  # print_playlists(spotifyClient, deviceID)
 else:
    print("No device found!")
 
@@ -72,7 +72,7 @@ def handle_post_request():
         else:
            spotifyClient = spotipy.Spotify(auth_manager=oauth_object)
            print(f"using cached token {token['access_token']}\n: expires in {int(token['expires_at'] - time.time())} seconds.")
-        spotifyClient.start_playback(getDeviceID, context_uri=command_to_playlist.get(data.get("command")))
+        spotifyClient.start_playback(getDeviceID(), context_uri=command_to_playlist.get(data.get("command")))
         response = {
           "message": "Starting playlist!",
           "received_data": data
