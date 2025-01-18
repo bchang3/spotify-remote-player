@@ -30,6 +30,8 @@ device = getDevice(spotifyClient)
 deviceID = getDeviceID(spotifyClient)
 if device:
   print(f"WELCOME TO THE PROJECT, {user_name['display_name']}\nCurrent Device: {device['name']}"  )
+  print(deviceID)
+  
   # print_playlists(spotifyClient, deviceID)
 else:
    print("No device found!")
