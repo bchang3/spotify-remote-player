@@ -41,7 +41,7 @@ command_to_playlist = {
     "0x58": "spotify:playlist:09dqjgCuarBiOKInqOKIdF",
     "0x59": "spotify:playlist:1t6z5svHyNX5UXQjjNhZbL",
     "0x45": "spotify:playlist:5NjzcO3AA4l7Gj1q6J7BB9",
-    "0x4d": "spotify:playlist:2ULQkcfryzLa5qstM80OBa",
+    "0x1e": "spotify:playlist:2ULQkcfryzLa5qstM80OBa",
 }
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_default_key')
