@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 import os
 import time
 import spotipy
-from spotify_player_utils import clearQueue, get_playlists, linebreak
-
+from spotify_player_utils import clearQueue, getDevice, getDeviceID, linebreak, print_playlists
+import sys
 load_dotenv()
 
 #set up spotify API client
@@ -25,16 +25,22 @@ user_name = spotifyClient.current_user()
 
 print("Devices", spotifyClient.devices()['devices'] )
 print(linebreak)
-device = [x for x in spotifyClient.devices()['devices'] if x['name'] == "Benjamin’s MacBook Pro"][0] #gets the ID for specified device
-deviceID = device["id"]
-rgb_playlist = get_playlists(spotifyClient, deviceID) # a dictionary of the playlists called "red", "green", "blue" that the user has
 
-print(f"WELCOME TO THE PROJECT, {user_name['display_name']}\nCurrent Device: {device['name']}"  )
+device = getDevice(spotifyClient)
+deviceID = getDeviceID(spotifyClient)
+if device:
+  print(f"WELCOME TO THE PROJECT, {user_name['display_name']}\nCurrent Device: {device['name']}"  )
+  print_playlists(spotifyClient, deviceID)
+else:
+   print("No device found!")
+
+
 
 command_to_playlist = {
     "0x58": "spotify:playlist:09dqjgCuarBiOKInqOKIdF",
     "0x59": "spotify:playlist:1t6z5svHyNX5UXQjjNhZbL",
-    "0x45": "spotify:playlist:5NjzcO3AA4l7Gj1q6J7BB9"
+    "0x45": "spotify:playlist:5NjzcO3AA4l7Gj1q6J7BB9",
+    "0x": "spotify:playlist:2ULQkcfryzLa5qstM80OBa",
 }
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_default_key')
@@ -57,7 +63,7 @@ def handle_post_request():
     # Process the data (for example, log it or store it)
     print(linebreak)
     print(f"Received message: {data}")
-    if (data.get("action") == "play_music"):
+    if (data.get("action") == "play_music" and data.get("command") in command_to_playlist):
         token = oauth_object.get_cached_token()
         if (not token or token['expires_at'] - time.time() < 60):
           print("refreshing token:")
@@ -66,8 +72,7 @@ def handle_post_request():
         else:
            spotifyClient = spotipy.Spotify(auth_manager=oauth_object)
            print(f"using cached token {token['access_token']}\n: expires in {int(token['expires_at'] - time.time())} seconds.")
-        print(command_to_playlist.get(data.get("command")))
-        spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
+        spotifyClient.start_playback(getDeviceID, context_uri=command_to_playlist.get(data.get("command")))
         response = {
           "message": "Starting playlist!",
           "received_data": data

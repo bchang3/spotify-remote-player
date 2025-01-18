@@ -130,19 +130,22 @@ void loop() {
         if (client.connect(server, 3333)) {
           Serial.println("connected to server");
           String payload;
-          if (IrReceiver.decodedIRData.command == 0x58) {
-            Serial.println("Red - primary");
-            payload = "{\"action\":\"play_music\",\"command\":\"0x58\"}";
+          String hexString = "0x" + String(IrReceiver.decodedIRData.command, HEX);
+          payload = String("{\"action\":\"play_music\",\"command\":\"") + String(hexString) +String("\"}");
+          
+          // if (IrReceiver.decodedIRData.command == 0x58) {
+          //   Serial.println("Red - primary");
+          //   payload = "{\"action\":\"play_music\",\"command\":\"0x58\"}";
             
-          } else if (IrReceiver.decodedIRData.command == 0x59) {
-            Serial.println("Green - primary");
-            payload = "{\"action\":\"play_music\",\"command\":\"0x59\"}";
-              // do something else
-          } else if (IrReceiver.decodedIRData.command == 0x45) {
-            Serial.println("Blue - primary");
-            payload = "{\"action\":\"play_music\",\"command\":\"0x45\"}";
-              // do something else
-          }
+          // } else if (IrReceiver.decodedIRData.command == 0x59) {
+          //   Serial.println("Green - primary");
+          //   payload = "{\"action\":\"play_music\",\"command\":\"0x59\"}";
+          //     // do something else
+          // } else if (IrReceiver.decodedIRData.command == 0x45) {
+          //   Serial.println("Blue - primary");
+          //   payload = "{\"action\":\"play_music\",\"command\":\"0x45\"}";
+          //     // do something else
+          // }
           // // Make a HTTP request:
           // // Construct the full HTTP POST request in one go
           String httpRequest = String("POST /api/play_music HTTP/1.1\r\n") +
