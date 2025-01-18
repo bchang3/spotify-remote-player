@@ -77,7 +77,7 @@ def handle_post_request():
         else:
            spotifyClient = spotipy.Spotify(auth_manager=oauth_object)
            print(f"using cached token {token['access_token']}\n: expires in {int(token['expires_at'] - time.time())} seconds.")
-        if (data.get("command").startswith("spotify")):
+        if (command_to_playlist[data.get("command")].startswith("spotify")):
           deviceID = getDeviceID(spotifyClient)
           spotifyClient.shuffle(True, deviceID)
           spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
@@ -88,13 +88,13 @@ def handle_post_request():
         else:
           device = spotifyClient.current_playback().get("device")
           volume = device.get("volume_percent")
-          command = data.get("command")
+          command = command_to_playlist[data.get("command")]
           if (command == "close"):
             spotifyClient.pause_playback(deviceID)
             response = {
             "message": "Paused playback!",
             "received_data": data
-          }
+            }
           elif (command == "vol_up"):
             spotifyClient.volume(min(volume + 10, 100))
             response = {
