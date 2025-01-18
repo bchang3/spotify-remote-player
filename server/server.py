@@ -77,8 +77,9 @@ def handle_post_request():
         else:
            spotifyClient = spotipy.Spotify(auth_manager=oauth_object)
            print(f"using cached token {token['access_token']}\n: expires in {int(token['expires_at'] - time.time())} seconds.")
+
+        deviceID = getDeviceID(spotifyClient)
         if (command_to_playlist[data.get("command")].startswith("spotify")):
-          deviceID = getDeviceID(spotifyClient)
           spotifyClient.shuffle(True, deviceID)
           spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
           response = {
