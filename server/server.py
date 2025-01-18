@@ -67,6 +67,7 @@ def handle_post_request():
     # Process the data (for example, log it or store it)
     print(linebreak)
     print(f"Received message: {data}")
+    response = {}
     if (data.get("action") == "play_music" and data.get("command") in command_to_playlist):
         token = oauth_object.get_cached_token()
         if (not token or token['expires_at'] - time.time() < 60):
