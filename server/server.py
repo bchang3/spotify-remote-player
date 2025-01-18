@@ -97,13 +97,13 @@ def handle_post_request():
             "received_data": data
             }
           elif (command == "vol_up"):
-            spotifyClient.volume(min(volume + 10, 100))
+            spotifyClient.volume(min(volume + 5, 100))
             response = {
             "message": "Increased volume!",
             "received_data": data
             }
           elif (command == "vol_down"):
-            spotifyClient.volume(max(volume - 10, 0))
+            spotifyClient.volume(max(volume - 5, 0))
             response = {
             "message": "Decreased volume!",
             "received_data": data
