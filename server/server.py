@@ -42,6 +42,9 @@ command_to_playlist = {
     "0x59": "spotify:playlist:1t6z5svHyNX5UXQjjNhZbL",
     "0x45": "spotify:playlist:5NjzcO3AA4l7Gj1q6J7BB9",
     "0x1e": "spotify:playlist:2ULQkcfryzLa5qstM80OBa",
+    "0x41": "close",
+    "0x5c": "vol_up",
+    "0x5d": "vol_down"
 }
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_default_key')
@@ -73,13 +76,36 @@ def handle_post_request():
         else:
            spotifyClient = spotipy.Spotify(auth_manager=oauth_object)
            print(f"using cached token {token['access_token']}\n: expires in {int(token['expires_at'] - time.time())} seconds.")
-        deviceID = getDeviceID(spotifyClient)
-        spotifyClient.shuffle(True, deviceID)
-        spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
-        response = {
-          "message": "Starting playlist!",
-          "received_data": data
-        }
+        if (data.get("command").startswith("spotify")):
+          deviceID = getDeviceID(spotifyClient)
+          spotifyClient.shuffle(True, deviceID)
+          spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
+          response = {
+            "message": "Starting playlist!",
+            "received_data": data
+          }
+        else:
+          device = spotifyClient.current_playback().get("device")
+          volume = device.get("volume_percent")
+          command = data.get("command")
+          if (command == "close"):
+            spotifyClient.pause_playback(deviceID)
+            response = {
+            "message": "Paused playback!",
+            "received_data": data
+          }
+          elif (command == "vol_up"):
+            spotifyClient.volume(min(volume + 10, 100))
+            response = {
+            "message": "Increased volume!",
+            "received_data": data
+            }
+          elif (command == "vol_down"):
+            spotifyClient.volume(max(volume - 10, 0))
+            response = {
+            "message": "Decreased volume!",
+            "received_data": data
+            }
         return jsonify(response), 200
     else:
       response = {
