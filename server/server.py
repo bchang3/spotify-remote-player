@@ -40,7 +40,7 @@ command_to_playlist = {
     "0x59": "spotify:playlist:1t6z5svHyNX5UXQjjNhZbL",
     "0x45": "spotify:playlist:5NjzcO3AA4l7Gj1q6J7BB9",
     "0x1e": "spotify:playlist:2ULQkcfryzLa5qstM80OBa",
-    "0x54": " spotify:playlist:0rR0aqcCvF7yNjaSzj2fWL",
+    "0x54": "spotify:playlist:0rR0aqcCvF7yNjaSzj2fWL",
     "0x41": "close",
     "0x5c": "vol_up",
     "0x5d": "vol_down"
