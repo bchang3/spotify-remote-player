@@ -80,13 +80,13 @@ def handle_post_request():
 
         deviceID = getDeviceID(spotifyClient)
         if (command_to_playlist[data.get("command")].startswith("spotify")):
-          spotifyClient.shuffle(True, deviceID)
           spotifyClient.start_playback(deviceID, context_uri=command_to_playlist.get(data.get("command")))
+          spotifyClient.shuffle(True, deviceID)
           response = {
             "message": "Starting playlist!",
             "received_data": data
           }
-        else:
+        elif spotifyClient.current_playback():
           device = spotifyClient.current_playback().get("device")
           volume = device.get("volume_percent")
           command = command_to_playlist[data.get("command")]
