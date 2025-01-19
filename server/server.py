@@ -35,13 +35,12 @@ if device:
 else:
    print("No device found!")
 
-
-
 command_to_playlist = {
     "0x58": "spotify:playlist:09dqjgCuarBiOKInqOKIdF",
     "0x59": "spotify:playlist:1t6z5svHyNX5UXQjjNhZbL",
     "0x45": "spotify:playlist:5NjzcO3AA4l7Gj1q6J7BB9",
     "0x1e": "spotify:playlist:2ULQkcfryzLa5qstM80OBa",
+    "0x54": " spotify:playlist:0rR0aqcCvF7yNjaSzj2fWL",
     "0x41": "close",
     "0x5c": "vol_up",
     "0x5d": "vol_down"
@@ -86,28 +85,34 @@ def handle_post_request():
             "message": "Starting playlist!",
             "received_data": data
           }
-        elif spotifyClient.current_playback():
-          device = spotifyClient.current_playback().get("device")
-          volume = device.get("volume_percent")
-          command = command_to_playlist[data.get("command")]
-          if (command == "close"):
-            spotifyClient.pause_playback(deviceID)
-            response = {
-            "message": "Paused playback!",
-            "received_data": data
-            }
-          elif (command == "vol_up"):
-            spotifyClient.volume(min(volume + 5, 100))
-            response = {
-            "message": "Increased volume!",
-            "received_data": data
-            }
-          elif (command == "vol_down"):
-            spotifyClient.volume(max(volume - 5, 0))
-            response = {
-            "message": "Decreased volume!",
-            "received_data": data
-            }
+        else:
+          if spotifyClient.current_playback():
+            device = spotifyClient.current_playback().get("device")
+            volume = device.get("volume_percent")
+            command = command_to_playlist[data.get("command")]
+            if (command == "close"):
+              spotifyClient.pause_playback(deviceID)
+              response = {
+              "message": "Paused playback!",
+              "received_data": data
+              }
+            elif (command == "vol_up"):
+              spotifyClient.volume(min(volume + 5, 100))
+              response = {
+              "message": "Increased volume!",
+              "received_data": data
+              }
+            elif (command == "vol_down"):
+              spotifyClient.volume(max(volume - 5, 0))
+              response = {
+              "message": "Decreased volume!",
+              "received_data": data
+              }
+          else:
+             response = {
+                "message": "There is no current playback!",
+                "received_data": data
+             }
         return jsonify(response), 200
     else:
       response = {

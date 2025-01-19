@@ -10,7 +10,7 @@ def print_playlists(spotifyObject, deviceID):
     playlists = spotifyObject.current_user_playlists()
     while playlists:
         for i, playlist in enumerate(playlists['items']):
-            # print(playlist["name"], playlist["uri"])
+            print(playlist["name"], playlist["uri"])
             pass
         if playlists['next']:
             playlists = spotifyObject.next(playlists)
