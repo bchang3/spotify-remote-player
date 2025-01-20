@@ -31,7 +31,7 @@ deviceID = getDeviceID(spotifyClient)
 if device:
   print(f"WELCOME TO THE PROJECT, {user_name['display_name']}\nCurrent Device: {device['name']}"  )
   print(deviceID)
-  print_playlists(spotifyClient, deviceID)
+  # print_playlists(spotifyClient, deviceID)
 else:
    print("No device found!")
 
@@ -43,6 +43,7 @@ command_to_playlist = {
     "0x54": "spotify:playlist:0rR0aqcCvF7yNjaSzj2fWL",
     "0x44": "spotify:playlist:3zPbG7n9W3yc7ZThP3AmUM",
     "0x50":"spotify:playlist:1Ax9cs74TNOOzIjXxtzYSK",
+    "0x1a":"spotify:playlist:7IT9hilkrRCozaA0bphpgO",
     "0x5":"spotify:playlist:0RiwgJqHn5gZmAeqq26Rn3",
     "0x41": "close",
     "0x5c": "vol_up",
